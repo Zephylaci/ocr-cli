@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from dataclasses import dataclass, asdict
+from dataclasses import asdict, dataclass
 from typing import Any
 
 
@@ -20,6 +20,7 @@ class OCRResult:
     text: str
     blocks: list[OCRBlock]
     error: str | None = None
+    markdown: str = ""
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -27,4 +28,5 @@ class OCRResult:
             "text": self.text,
             "blocks": [b.to_dict() for b in self.blocks],
             "error": self.error,
+            "markdown": self.markdown,
         }

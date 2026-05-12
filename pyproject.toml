@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "ocr-cli"
-version = "0.1.0"
+version = "0.2.0"
 description = "Local-first OCR CLI + HTTP service for AI agents"
 readme = "README.md"
 requires-python = ">=3.10"
@@ -18,7 +18,8 @@ dependencies = [
 
 [project.optional-dependencies]
 ocr = [
-  "rapidocr-onnxruntime>=1.4.0"
+  "rapidocr>=3.2.0",
+  "onnxruntime>=1.17.0",
 ]
 
 [project.scripts]
