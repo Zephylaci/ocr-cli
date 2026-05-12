@@ -1,0 +1,31 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ocr-cli"
+version = "0.1.0"
+description = "Local-first OCR CLI + HTTP service for AI agents"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+  "typer>=0.12",
+  "fastapi>=0.110",
+  "uvicorn>=0.29",
+  "python-multipart>=0.0.9",
+  "Pillow>=10.0",
+]
+
+[project.optional-dependencies]
+ocr = [
+  "rapidocr-onnxruntime>=1.4.0"
+]
+
+[project.scripts]
+ocr-cli = "ocr_cli.main:app"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
