@@ -33,6 +33,7 @@ def run(
     min_side_len: int = 30,
     width_height_ratio: float = 8,
     min_height: int = 30,
+    debug: bool = typer.Option(False, "--debug"),
 ):
     if output not in {"text", "json", "markdown"}:
         typer.echo("--output 仅支持 text/json/markdown", err=True)
@@ -42,7 +43,7 @@ def run(
             max_side_len = 4000
         if width_height_ratio == 8:
             width_height_ratio = -1
-    engine = OCREngine(profile=profile)
+    engine = OCREngine(profile=profile, debug=debug)
     result = engine.run(
         image,
         max_side_len=max_side_len,
@@ -63,8 +64,8 @@ def run(
 
 
 @app.command()
-def serve(host: str = "127.0.0.1", port: int = 8000, profile: str = "default"):
-    engine = OCREngine(profile=profile)
+def serve(host: str = "127.0.0.1", port: int = 8000, profile: str = "default", debug: bool = typer.Option(False, "--debug")):
+    engine = OCREngine(profile=profile, debug=debug)
     engine.load()
     uvicorn.run(create_app(engine), host=host, port=port)
 
