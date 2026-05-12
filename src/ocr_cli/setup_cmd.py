@@ -1,10 +1,10 @@
 from __future__ import annotations
 
 import importlib
-import shutil
 import os
+import shutil
 from dataclasses import dataclass
-from pathlib import Path
+from importlib.metadata import PackageNotFoundError, version
 
 from .engine import MODEL_ROOT, OCREngine
 
@@ -16,6 +16,21 @@ class CheckItem:
     reason: str = ""
 
 
+def _parse_version_parts(raw_version: str) -> tuple[int, ...]:
+    parts: list[int] = []
+    for seg in raw_version.split("."):
+        digits = ""
+        for ch in seg:
+            if ch.isdigit():
+                digits += ch
+            else:
+                break
+        if not digits:
+            break
+        parts.append(int(digits))
+    return tuple(parts)
+
+
 def run_setup(check_only: bool, debug: bool) -> int:
     checks: list[CheckItem] = []
     for mod in ["PIL", "typer", "fastapi", "onnxruntime"]:
@@ -25,12 +40,13 @@ def run_setup(check_only: bool, debug: bool) -> int:
         except Exception as exc:
             checks.append(CheckItem(mod, False, str(exc)))
 
-    rapidocr_ok = False
     try:
-        rapidocr = importlib.import_module("rapidocr")
-        ver = getattr(rapidocr, "__version__", "0")
-        rapidocr_ok = tuple(int(x) for x in ver.split(".")[:2]) >= (3, 2)
-        checks.append(CheckItem("rapidocr>=3.2.0", rapidocr_ok, "" if rapidocr_ok else f"当前版本: {ver}"))
+        rapidocr_ver = version("rapidocr")
+        parsed = _parse_version_parts(rapidocr_ver)
+        rapidocr_ok = parsed >= (3, 2)
+        checks.append(CheckItem("rapidocr>=3.2.0", rapidocr_ok, "" if rapidocr_ok else f"当前版本: {rapidocr_ver}"))
+    except PackageNotFoundError:
+        checks.append(CheckItem("rapidocr>=3.2.0", False, "未安装 rapidocr"))
     except Exception as exc:
         checks.append(CheckItem("rapidocr>=3.2.0", False, str(exc)))
 
@@ -53,7 +69,6 @@ def run_setup(check_only: bool, debug: bool) -> int:
         return 2
 
     try:
-        # 预下载默认 profile 模型 + 自检
         engine = OCREngine(profile="default", debug=debug)
         engine.load()
         sample = model_dir / "selftest.png"
