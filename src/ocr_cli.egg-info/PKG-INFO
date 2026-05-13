@@ -1,3 +1,18 @@
+Metadata-Version: 2.4
+Name: ocr-cli
+Version: 0.2.0
+Summary: Local-first OCR CLI + HTTP service for AI agents
+Requires-Python: >=3.10
+Description-Content-Type: text/markdown
+Requires-Dist: typer>=0.12
+Requires-Dist: fastapi>=0.110
+Requires-Dist: uvicorn>=0.29
+Requires-Dist: python-multipart>=0.0.9
+Requires-Dist: Pillow>=10.0
+Provides-Extra: ocr
+Requires-Dist: rapidocr>=3.2.0; extra == "ocr"
+Requires-Dist: onnxruntime>=1.17.0; extra == "ocr"
+
 # ocr-cli v2
 
 ## 简介

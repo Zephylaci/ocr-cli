@@ -15,22 +15,21 @@ MODEL_ROOT = Path.home() / ".ocr-cli" / "models"
 class ProfileConfig:
     det_model_type: str
     rec_model_type: str
-    rec_lang_type: str
     ocr_version: str
 
 
 PROFILE_MAP: dict[str, ProfileConfig] = {
-    "fast": ProfileConfig("mobile", "mobile", "ch", "PP-OCRv4"),
-    "default": ProfileConfig("mobile", "mobile", "ch", "PP-OCRv5"),
-    "doc": ProfileConfig("mobile", "mobile", "ch_doc", "PP-OCRv5"),
-    "accurate": ProfileConfig("mobile", "server", "ch", "PP-OCRv5"),
+    "fast": ProfileConfig("mobile", "mobile", "PP-OCRv4"),
+    "default": ProfileConfig("mobile", "mobile", "PP-OCRv5"),
+    "accurate": ProfileConfig("mobile", "server", "PP-OCRv5"),
 }
 
 
 class OCREngine:
     def __init__(self, profile: str = "default", debug: bool = False) -> None:
         if profile not in PROFILE_MAP:
-            raise ValueError(f"不支持的 profile: {profile}")
+            valid = ", ".join(sorted(PROFILE_MAP))
+            raise ValueError(f"不支持的 profile: {profile}（可选: {valid}）")
         self.profile = profile
         self.debug = debug
         self._ocr: Any | None = None
@@ -62,7 +61,7 @@ class OCREngine:
             "Cls.engine_type": EngineType.ONNXRUNTIME,
             "Cls.lang_type": LangCls.CH,
             "Rec.engine_type": EngineType.ONNXRUNTIME,
-            "Rec.lang_type": LangRec.CH_DOC if p.rec_lang_type == "ch_doc" else LangRec.CH,
+            "Rec.lang_type": LangRec.CH,
             "Rec.model_type": ModelType.MOBILE if p.rec_model_type == "mobile" else ModelType.SERVER,
             "Rec.ocr_version": OCRVersion.PPOCRV4 if p.ocr_version == "PP-OCRv4" else OCRVersion.PPOCRV5,
         }

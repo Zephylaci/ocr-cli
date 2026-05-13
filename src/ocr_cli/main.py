@@ -43,7 +43,11 @@ def run(
             max_side_len = 4000
         if width_height_ratio == 8:
             width_height_ratio = -1
-    engine = OCREngine(profile=profile, debug=debug)
+    try:
+        engine = OCREngine(profile=profile, debug=debug)
+    except ValueError as exc:
+        typer.echo(str(exc), err=True)
+        raise typer.Exit(1) from exc
     result = engine.run(
         image,
         max_side_len=max_side_len,
@@ -65,7 +69,11 @@ def run(
 
 @app.command()
 def serve(host: str = "127.0.0.1", port: int = 8000, profile: str = "default", debug: bool = typer.Option(False, "--debug")):
-    engine = OCREngine(profile=profile, debug=debug)
+    try:
+        engine = OCREngine(profile=profile, debug=debug)
+    except ValueError as exc:
+        typer.echo(str(exc), err=True)
+        raise typer.Exit(1) from exc
     engine.load()
     uvicorn.run(create_app(engine), host=host, port=port)
 

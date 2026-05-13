@@ -1,0 +1,2 @@
+[console_scripts]
+ocr-cli = ocr_cli.main:app

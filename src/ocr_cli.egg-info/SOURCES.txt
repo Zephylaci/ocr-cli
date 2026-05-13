@@ -1,0 +1,14 @@
+README.md
+pyproject.toml
+src/ocr_cli/__init__.py
+src/ocr_cli/engine.py
+src/ocr_cli/main.py
+src/ocr_cli/server.py
+src/ocr_cli/setup_cmd.py
+src/ocr_cli/types.py
+src/ocr_cli.egg-info/PKG-INFO
+src/ocr_cli.egg-info/SOURCES.txt
+src/ocr_cli.egg-info/dependency_links.txt
+src/ocr_cli.egg-info/entry_points.txt
+src/ocr_cli.egg-info/requires.txt
+src/ocr_cli.egg-info/top_level.txt
